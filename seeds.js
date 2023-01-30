@@ -26,3 +26,36 @@ mongoose
 //   .catch((e) => {
 //     console.log(e);
 //   });
+
+const seedProducts = [
+  {
+    name: "Fairy Egglant",
+    price: 1.0,
+    category: "vegetable",
+  },
+  {
+    name: "Organic Goddess Melon",
+    price: 4.99,
+    category: "fruit",
+  },
+  {
+    name: "Organic Mini Seedless Watermelon",
+    price: 3.99,
+    category: "fruit",
+  },
+  {
+    name: "Organic Celery",
+    price: 1.5,
+    category: "vegetable",
+  },
+  {
+    name: "Chocolate Whole Milk",
+    price: 2.69,
+    category: "dairy",
+  },
+];
+
+// insertMany를 사용할 때 하나라도 유효성 검사를 통과하지 못하면 아무것도 삽입되지 않음에 주의!
+Product.insertMany(seedProducts)
+  .then((res) => console.log(res))
+  .catch((e) => console.log(e));
