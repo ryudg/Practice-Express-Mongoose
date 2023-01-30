@@ -24,4 +24,13 @@ app.get("/products", async (req, res) => {
   res.render("products/index", { products });
 });
 
+// 상품 상세 정보
+// URL을 안전하게 만드는 웹 Slug
+// id는 Mongo ID 사용 - "Slug"는 일반적으로 이미 얻은 데이터를 사용하여 유효한 URL을 생성하는 방법
+app.get("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  res.render("products/show", { product });
+});
+
 app.listen(3133, () => console.log("APP IS OPENED"));
