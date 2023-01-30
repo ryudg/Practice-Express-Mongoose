@@ -20,7 +20,7 @@ module.exports = Product;
 const Product = require("./models/product");
 ```
 
-# seed파일
+# seed 파일
 - seed는 서버가 시작될 때 애플리케이션이 가지고 있어야 할 정적인 데이터들을 DB에 추가해주는 기능을 의미
 - 데이터 삽입
 ```javascript
