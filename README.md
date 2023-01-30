@@ -193,7 +193,7 @@ app.get("/products", async (req, res) => {
   <% } %>
 </ul>
 ```
-## 상세정보 페이지 만들기
+## `READ` 상세정보 페이지 만들기
 ```javascript
 // ... index.js
 
@@ -209,3 +209,24 @@ app.get("/products/:id", async (req, res) => {
 });
 ```
 - `http://localhost:3133/products/63d7c3ddf1e423f3d667883c`와 같이 Mongo ID를 이용해 접속
+
+## `CREATE` 상품 추가 페이지 만들기
+```javascript
+// ... index.js
+
+...
+
+// 상품 추가 form input 페이지
+app.get("/products/new", (req, res) => {
+  res.render("products/new");
+});
+
+// 추가한 상품 정보 제출
+app.post("/products", async (req, res) => {
+  const newProduct = new Product(req.body); // 유효성 검사를 하지 않으니 req.body에 포함된 정보 중 나타나서는 안되는 추가적인 정보를 확인할 수 없다
+  await newProduct.save();
+  res.redirect(`products/${newProduct._id}`);
+});
+```
+
+## `UPDATE` 개별 상품 업데이트하기
