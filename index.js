@@ -55,7 +55,6 @@ app.get("/products/:id/edit", async (req, res) => {
   const product = await Product.findById(id);
   res.render("products/edit", { product, categories });
 });
-
 app.put("/products/:id", async (req, res) => {
   const { id } = req.params;
   const product = await Product.findByIdAndUpdate(id, req.body, {
@@ -63,6 +62,13 @@ app.put("/products/:id", async (req, res) => {
     new: true,
   });
   res.redirect(`/products/${product._id}`);
+});
+
+// 상품 정보 삭제
+app.delete("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const deleteProduct = await Product.findByIdAndDelete(id);
+  res.redirect("/products");
 });
 
 app.listen(3133, () => console.log("APP IS OPENED"));
