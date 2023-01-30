@@ -225,8 +225,102 @@ app.get("/products/new", (req, res) => {
 app.post("/products", async (req, res) => {
   const newProduct = new Product(req.body); // 유효성 검사를 하지 않으니 req.body에 포함된 정보 중 나타나서는 안되는 추가적인 정보를 확인할 수 없다
   await newProduct.save();
-  res.redirect(`products/${newProduct._id}`);
+  res.redirect(`products/${newProduct._id}`);   // newProduct._id 언더스코어 Mongoose로부터 실제 정보를 받았을 때만 작동
 });
 ```
 
 ## `UPDATE` 개별 상품 업데이트하기
+- PUT 요청은 PATCH 요청과 달리 객체를 재정의하거나 교체할 때 사용하고
+- PATCH 요청은 문서나 객체의 일부를 변경할 때 사용
+
+- form Method를 PUT으로 할 수 없기 때문에 `method-override` 설치
+```bash
+> npm i method-override
+```
+```javascript
+// ... index.js
+
+...
+
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
+```
+```html
+<!-- edit.ejs -->
+
+...
+
+<form action="/products/<%= product._id %>?_method=PUT" method="POST">
+```
+- PUT 요청을 보내고 라우트에서 확인
+```javascript
+// ... index.js
+
+...
+
+// 개별 상품 업데이트하기
+app.get("/products/:id/edit", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+  res.render("products/edit", { product });
+});
+
+app.put("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findByIdAndUpdate(id, req.body, {
+    runValidators: true, // default 유효성 검사
+    new: true,
+  });
+  res.redirect(`/products/${product._id}`);
+});
+```
+
+### `option` default 값 설정하기
+```html
+<!-- edit.ejs -->
+
+...
+
+<option value="fruit" <%= product.category === "fruit" ? "selected" : "" %> >fruit</option>
+<option value="fruit" <%= product.category === "vegetable" ? "selected" : "" %> >vegetable</option>
+<option value="fruit" <%= product.category === "diary" ? "selected" : "" %> >diary</option>
+```
+- 위의 예시처럼 조건을 설정해 `option`에 `selected` 값을 추가해도 되지만 카테고리가 추가될 수록 가독성이 떨어짐
+- 옵션을 생성하는 loop 설정하기
+
+```javascript
+// ... index.js 
+
+...
+
+const categories = ["fruit", "vegetable", "dairy"];
+
+...
+
+app.get("/products/new", (req, res) => {
+  res.render("products/new", { categories });
+});
+```
+- loop를 활용한 조건
+```html
+<!-- edit.ejs -->
+
+...
+
+<% for(let category of categories) {%>
+<option value="<%= category %>" <%= product.category === category ? "selected" : "" %> > <%= category %> </option>
+<% } %>
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
