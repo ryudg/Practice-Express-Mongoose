@@ -25,8 +25,14 @@ app.use(methodOverride("_method"));
 const categories = ["fruit", "vegetable", "dairy"];
 
 app.get("/products", async (req, res) => {
-  const products = await Product.find({}); // 모든 데이터 조회, 조회하는 시간이 필요하기 때문에 이 라우터에 비동기 핸들러를 만들기
-  res.render("products/index", { products });
+  const { category } = req.query; // req.query에서 카테고리를 찾은 후 있다면
+  if (category) {
+    const products = await Product.find({ category }); // 카테고리 페이지로
+    res.render("products/index", { products, category });
+  } else {
+    const products = await Product.find({}); // 모든 데이터 조회, 조회하는 시간이 필요하기 때문에 이 라우터에 비동기 핸들러를 만들기
+    res.render("products/index", { products, category: "All" });
+  }
 });
 
 // 상품 추가 form input 페이지
