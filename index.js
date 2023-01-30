@@ -18,13 +18,25 @@ mongoose
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/products", async (req, res) => {
   const products = await Product.find({}); // 모든 데이터 조회, 조회하는 시간이 필요하기 때문에 이 라우터에 비동기 핸들러를 만들기
   res.render("products/index", { products });
 });
 
-// 상품 상세 정보
+// 상품 추가 form input 페이지
+app.get("/products/new", (req, res) => {
+  res.render("products/new");
+});
+// 추가한 상품 정보 제출
+app.post("/products", async (req, res) => {
+  const newProduct = new Product(req.body); // 유효성 검사를 하지 않으니 req.body에 포함된 정보 중 나타나서는 안되는 추가적인 정보를 확인할 수 없다
+  await newProduct.save();
+  res.redirect(`products/${newProduct._id}`);
+});
+
+// 상품 상세 정보 페이지
 // URL을 안전하게 만드는 웹 Slug
 // id는 Mongo ID 사용 - "Slug"는 일반적으로 이미 얻은 데이터를 사용하여 유효한 URL을 생성하는 방법
 app.get("/products/:id", async (req, res) => {
