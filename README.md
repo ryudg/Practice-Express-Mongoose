@@ -167,5 +167,30 @@ MogoDB Connection Open!!!
         "__v" : 0
 }
 ```
+# RESTful하게 웹 페이지 구축하기
 
+## 모든 데이터 조회
+- 조회하는 시간이 필요하기 때문에 이 라우터에 비동기 핸들러를 만들기
+```javascript
+
+...
+
+app.get("/products", async (req, res) => {
+  const products = await Product.find({});
+  res.render("products/index", { products });
+});
+```
+# ejs 템플릿 엔진을 사용해 화면에 출력하기
+
+```html
+// views/products/index.ejs
+
+...
+
+<ul>
+  <% for (const product of products) { %>
+  <li><%= product.name %></li>
+  <% } %>
+</ul>
+```
 
