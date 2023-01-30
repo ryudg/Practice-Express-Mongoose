@@ -275,7 +275,7 @@ app.put("/products/:id", async (req, res) => {
 });
 ```
 
-### `option` default 값 설정하기
+### option selected 설정하기
 ```html
 <!-- edit.ejs -->
 
@@ -314,10 +314,32 @@ app.get("/products/new", (req, res) => {
 ```
 
 
+## `DELETE` 상품 정보 삭제하기
+```html
+<!-- show.ejs -->
 
+...
 
+<form action="/products/<%= products._id %>?_method=DELETE" method="POST">
+  <button>DELETE</button>
+</form>
+```
 
+```javascript
+// ... index.js
 
+...
+
+// 상품 정보 삭제
+app.delete("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const deleteProduct = await Product.findByIdAndDelete(id);
+  res.redirect("/products");
+});
+
+```
+
+### 카테고리별로 필터링하기
 
 
 
